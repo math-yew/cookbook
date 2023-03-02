@@ -42,6 +42,28 @@ app.get('/data/:id', (req, res) => {
   });
 });
 
+app.get('/meallist/:id', async (req, res) => {
+  console.log("get id");
+  try {
+    const result = await db.collection('meallists').aggregate([
+      { $match: {_id: ObjectId(req.params.id)}},
+      {
+        $lookup: {
+          from: "recipes",
+          localField: "meals",
+          foreignField: "_id",
+          as: "mealDetails",
+        }
+      }
+    ]).toArray();
+    // console.log(JSON.stringify(result));
+    res.json(result);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal server error');
+  }
+});
+
 app.get('/dataOne', (req, res) => {
   console.log("GETone");
   db.collection('recipes').findOne({},(err, result) => {
@@ -71,6 +93,15 @@ app.get('/recipes/:archive', (req, res) => {
   console.log("case");
   let query = (req.params.archive == 'true') ? {} : {archive: {$ne:true}};
   db.collection('recipes').find(query).toArray((err, result) => {
+    if (err) return console.log(err);
+    res.send(result);
+  });
+});
+
+app.get('/meallists/:archive', (req, res) => {
+  console.log("case");
+  let query = (req.params.archive == 'true') ? {} : {archive: {$ne:true}};
+  db.collection('meallists').find(query).toArray((err, result) => {
     if (err) return console.log(err);
     res.send(result);
   });

@@ -7,6 +7,8 @@ import App from './App';
 import Main from './main';
 import Recipes from './Recipes';
 import Recipe from './Recipe';
+import MealLists from './MealLists';
+import MealList from './MealList';
 import Table from './table';
 import Counter from './counter';
 import Math from './math';
@@ -22,6 +24,8 @@ ReactDOM.render(
         <Route path="table" element={<Table />} />
         <Route path="recipes" element={<Recipes />} />
         <Route path="recipe" element={<Recipe />} />
+        <Route path="meallists" element={<MealLists />} />
+        <Route path="meallist" element={<MealList />} />
         <Route path="counter" element={<Counter/>} />
         <Route path="math" element={<Math/>} />
         <Route path="name" element={<FullName/>} />

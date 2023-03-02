@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react';
 
+import { UpdateIngredients } from './UpdateIngredients';
+
 function UpdateRecipe(props) {
 
-  const {title, setTitle, instructions, setInstructions, ingredients, setIngredient} = props;
+  const {title, setTitle, instructions, setInstructions, ingredients, setIngredients, saveCase} = props;
 
   return (
     <>
       <input style={{width:"100%"}} type="text" placeholder="Name" value={title ||""} onChange={(e)=>setTitle(e.target.value)} />
-      <p>{instructions}</p>
-      {(ingredients || []).map((item, index) => (
-          <p key={index}>{item}</p>
-        ))}
+      <textarea style={{width:"100%"}} type="text" placeholder="Name" value={instructions ||""} onChange={(e)=>setInstructions(e.target.value)} />
+      <UpdateIngredients
+        ingredients={ingredients}
+        setIngredients={setIngredients}
+      />
+      <button  onClick={()=>saveCase()}>Save</button>
     </>
   )
 

@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import RecipeService from './RecipeService';
-import { UpdateRecipe } from './UpdateRecipe';
+import MealListService from './MealListService';
 import { useLocation } from 'react-router-dom';
 
-const Recipe = (props) => {
+const MealList = (props) => {
 
   const location = useLocation();
   const [id, setId] = useState(null);
@@ -15,7 +14,7 @@ const Recipe = (props) => {
 
   useEffect(() => {
     console.log(location.state.id);
-    RecipeService.getRecipe(location.state.id)
+    MealListService.getMealList(location.state.id)
       .then(res => {
         setId(location.state.id);
         setData(res.data);
@@ -36,14 +35,14 @@ const Recipe = (props) => {
     readyData.ingredients = ingredients;
     console.log("readyData: " + JSON.stringify(readyData));
     if(!!id){
-      RecipeService.updateRecipe(id, readyData)
+      MealListService.updateMealList(id, readyData)
       .then((res)=>{
         if(res.status == '200') setId(id);
       });
     }else {
       readyData.startDate = new Date();
       console.log(readyData.startDate);
-      RecipeService.postRecipe(readyData)
+      MealListService.postMealList(readyData)
       .catch(err => console.log(err));
     }
   }
@@ -51,25 +50,17 @@ const Recipe = (props) => {
   return (
     <>
       <h1>{title}</h1>
+
       <ul>
         {(ingredients || []).map((item, index) => (
             <li key={index}>{item}</li>
           ))}
       </ul>
-      <p>{instructions}</p>
+      <p>{JSON.stringify(data, null, 2)}</p>
 
-      <UpdateRecipe
-        title={title}
-        setTitle={setTitle}
-        instructions={instructions}
-        setInstructions={setInstructions}
-        ingredients={ingredients}
-        setIngredients={setIngredients}
-        saveCase={saveCase}
-      />
     </>
   )
 
 }
 
-export default Recipe;
+export default MealList;
