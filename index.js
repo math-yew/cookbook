@@ -3,6 +3,40 @@ const MongoClient = require('mongodb').MongoClient;
 var bodyParser = require('body-parser');
 var ObjectId = require('mongodb').ObjectId;
 
+const fs = require('node:fs');
+async function decode(message_file){
+  fs.readFile(message_file, 'utf8', (err, data) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    let pyramidValues = data.split("\r\n");
+    let pyramidSize = pyramidValues.length;
+    let num = 1;
+    let importantValues = [];
+    let i = 2;
+    while(num <= pyramidSize){
+      importantValues.push(num);
+      num += i;
+      i++
+    }
+    let messageArray = [...importantValues];
+    pyramidValues.map((line)=>{
+      let lineArray = line.split(" ");
+      let index = importantValues.indexOf(lineArray[0]*1);
+      lineArray.shift();
+      if(index > -1) messageArray.splice(index, 1, lineArray.join(" "))
+    });
+    let message =  messageArray.join(" ");
+    console.log("message");
+    console.log(message);
+    return message;
+  });
+}
+
+let amessage = decode('message_file.txt');
+// console.log("::: " + amessage);
+
 const config = require('./config.js');
 const app = express();
 let db;

@@ -4,7 +4,7 @@ import { UpdateIngredients } from './UpdateIngredients';
 
 function UpdateRecipe(props) {
 
-  const {title, setTitle, instructions, setInstructions, ingredients, setIngredients, saveCase} = props;
+  const {title, setTitle, instructions, setInstructions, ingredients, setIngredients, saveCase, deleteRecipe} = props;
 
   return (
     <>
@@ -14,7 +14,8 @@ function UpdateRecipe(props) {
         ingredients={ingredients}
         setIngredients={setIngredients}
       />
-      <button  onClick={()=>saveCase()}>Save</button>
+      <button  onClick={()=>saveCase()}>Save?</button>
+      <button  onClick={()=>deleteRecipe()}>Delete</button>
     </>
   )
 

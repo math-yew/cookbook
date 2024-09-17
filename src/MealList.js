@@ -12,14 +12,18 @@ const MealList = (props) => {
   const [data, setData] = useState([]);
   const [list, setList] = useState([]);
   const [name, setName] = useState();
+  const [actionStepsTaken, setActionStepsTaken] = useState();
   const [recipesArrived, setRecipesArrived] = useState(false);
   const [listArrived, setListArrived] = useState(false);
+
+  const [dragging,setDragging] = useState(null);
+  const [eclipsing,setEclipsing] = useState(null);
+  const [hoverColor,setHoverColor] = useState("#ffffff");
 
 
   useEffect(() => {
     setRecipesArrived(false);
     setListArrived(false);
-
     RecipeService.getAllRecipes()
       .then(res => {
         setRecipeData(res.data);
@@ -27,7 +31,6 @@ const MealList = (props) => {
         setRecipes(cleanList);
         setRecipesArrived(true);
       });
-
     MealListService.getMealList(location.state.id)
       .then(res => {
         setId(location.state.id);
@@ -39,7 +42,6 @@ const MealList = (props) => {
           setListArrived(true);
         }
       });
-
   }, []);
 
   useEffect(() => {
@@ -73,13 +75,39 @@ const MealList = (props) => {
     }
   }
 
+  const startDrag = (e, index) => {
+    setDragging(index)
+    setHoverColor("#aaffaa");
+  }
+
+  const dropDrag = (e) =>{
+    let to = eclipsing;
+    let from = dragging;
+    setHoverColor("#ffffff");
+    if(to != null  && from != null){
+      let arr = actionStepsTaken;
+      to = (from >= to) ? to : to + 1;
+      let toRemove = (from >= to) ? from +1 : from;
+      arr.splice(to, 0, arr[from]);
+      arr.splice(toRemove,1);
+      setActionStepsTaken(arr);
+    }
+  };
+
   return (
     <>
       <h1>{name}</h1>
       <div style={{display:"flex", flexFlow:"row", width:"50%"}}>
         <div style={{width:"50%"}}>
           {(recipes || []).map((job, i)=>(
-            <div key={i} className="caseCard" style={{backgroundColor:(job.archive) ? '#88d6d4' : '#e2fdff'}} onClick={()=>setId(job.id)}>
+            <div key={i} className="caseCard"
+              style={{backgroundColor:(job.archive) ? '#88d6d4' : '#e2fdff'}}
+              draggable
+              onDragStart={(e)=>startDrag(e, i)}
+              onDragOver={(e)=>setEclipsing(i)}
+              onDragLeave={()=>setEclipsing(null)}
+              onDragEnd={()=>dropDrag()}
+              >
               <h3 style={{margin: '0px'}}>{job.title}</h3>
               <p>{job.id}</p>
             </div>
@@ -88,7 +116,14 @@ const MealList = (props) => {
         <div style={{width:"50%"}}>
           {
             (list || []).map((item, i) => (
-              <div key={i} className="caseCard" style={{backgroundColor:false ? '#88d6d4' : '#e2fdff'}}>
+              <div key={i} className="caseCard"
+                style={{backgroundColor:false ? '#88d6d4' : '#e2fdff'}}
+                draggable
+                onDragStart={(e)=>startDrag(e, i)}
+                onDragOver={(e)=>setEclipsing(i)}
+                onDragLeave={()=>setEclipsing(null)}
+                onDragEnd={()=>dropDrag()}
+                >
                 <h3 style={{margin: '0px'}}>{item.title}</h3>
                 <p>{item.id}</p>
               </div>

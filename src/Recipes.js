@@ -20,14 +20,14 @@ const Recipes = () => {
   return (
     <div style={{ display: 'block'}}>
       <h1>Recipes</h1>
-      <input
+      {/* <input
         style={{transform: 'scale(1.5)', marginRight: '10px'}}
         type="checkbox"
         name="showArchived"
         checked={showArchived}
         onChange={() => setShowArchived(!showArchived)}
       />
-      <label name="showArchived">Show Archived</label>
+      <label name="showArchived">Show Archived</label> */}
       <Link to="/recipe" state={{id:null}}>
         <div  style={{ display: 'flex', width: '100%', justifyContent: 'right'}}>
           <div  style={{backgroundColor:'#a2ff9c', color: '#0a0', height: '50px', width: '50px',
